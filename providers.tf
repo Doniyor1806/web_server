@@ -1,9 +1,9 @@
 terraform {
   cloud {
-    organization = "donis_cloud" # change  
+    organization = "donis_cloud" # changed  
 
     workspaces {
-      name = "apple_workspace_created_by_terraform" # uzgartirdim
+      name = "apple_workspace_created_by_terraform" # changed
     }
   }
   required_providers {

@@ -5,7 +5,7 @@ resource "aws_key_pair" "deployer" {
 
 variable "prefix" {
   type    = string
-  default = "project-aug-28" # uzgartir/tekshir vrode norm!
+  default = "project-aug-28-web-server" # uzgartir/tekshir vrode norm!
 }
 
 resource "aws_vpc" "main" {
@@ -24,61 +24,61 @@ resource "aws_subnet" "main" {
   }
 }
 
-# module "remote_module" {
-#   # source = terraform-aws-security-groups-027
-#   source  = "app.terraform.io/donis_cloud/practice/module" #uzini remote modulini qoy
-#   version = "1.0.0"
-#   vpc_id  = aws_vpc.main.id
+module "remote_module" {
+  # source = terraform-aws-security-groups-027
+  source  = "app.terraform.io/donis_cloud/practice/module" #uzini remote modulini qoy
+  version = "1.0.0"
+  vpc_id  = aws_vpc.main.id
 
-#   security_groups = {
-#     "web" = {
-#       "description" = "Security Group for Web Tier"
-#       "ingress_rules" = [
-#         {
-#           to_port     = 22
-#           from_port   = 22
-#           cidr_blocks = ["0.0.0.0/0"]
-#           protocol    = "tcp"
-#           description = "ssh ingress rule"
+  security_groups = {
+    "web" = {
+      "description" = "Security Group for Web Tier"
+      "ingress_rules" = [
+        {
+          to_port     = 22
+          from_port   = 22
+          cidr_blocks = ["0.0.0.0/0"]
+          protocol    = "tcp"
+          description = "ssh ingress rule"
 
-#         },
-#         {
-#           to_port     = 80
-#           from_port   = 80
-#           cidr_blocks = ["0.0.0.0/0"]
-#           protocol    = "tcp"
-#           description = "http ingress rule"
-#         },
-#         {
-#           to_port     = 443
-#           from_port   = 443
-#           cidr_blocks = ["0.0.0.0/0"]
-#           protocol    = "tcp"
-#           description = "https ingress rule"
-#         }
-#       ]
-#     },
-#   }
-# }
+        },
+        {
+          to_port     = 80
+          from_port   = 80
+          cidr_blocks = ["0.0.0.0/0"]
+          protocol    = "tcp"
+          description = "http ingress rule"
+        },
+        {
+          to_port     = 443
+          from_port   = 443
+          cidr_blocks = ["0.0.0.0/0"]
+          protocol    = "tcp"
+          description = "https ingress rule"
+        }
+      ]
+    },
+  }
+}
 
-# resource "aws_instance" "server" {
-#   ami           = "ami-066784287e358dad1"
-#   instance_type = "t2.micro"
-#   key_name      = aws_key_pair.deployer.key_name
+resource "aws_instance" "server" {
+  ami           = "ami-066784287e358dad1"
+  instance_type = "t2.micro"
+  key_name      = aws_key_pair.deployer.key_name
 
-#   subnet_id              = aws_subnet.main.id
-#   vpc_security_group_ids = [module.remote_module.security_group_id["web"]]
+  subnet_id              = aws_subnet.main.id
+  vpc_security_group_ids = [module.remote_module.security_group_id["web"]]
 
-#   user_data = <<-EOF
-#               #!/bin/bash
-#               sudo yum update -y
-#               sudo yum install -y httpd
-#               sudo systemctl start httpd.service
-#               sudo systemctl enable httpd.service
-#               sudo echo "<h1> Hello World from BamBam </h1>" > /var/www/html/index.html                   
-#               EOF 
+  user_data = <<-EOF
+              #!/bin/bash
+              sudo yum update -y
+              sudo yum install -y httpd
+              sudo systemctl start httpd.service
+              sudo systemctl enable httpd.service
+              sudo echo "<h1> Hello World from BamBam </h1>" > /var/www/html/index.html                   
+              EOF 
 
-#   tags = {
-#     Name = join("-", [var.prefix, "ec2"])
-#   }
-# }
+  tags = {
+    Name = join("-", [var.prefix, "ec2"])
+  }
+}
