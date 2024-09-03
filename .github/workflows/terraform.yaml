@@ -23,7 +23,7 @@ jobs:
       - name: My First Terraform Setup
         uses: hashicorp/setup-terraform@v2
         with:
-          cli_config_credentials_token: ${{ secrets.MY_TERRAFORM_LOGIN_TOKEN }} #tekshir uzgartir
+          cli_config_credentials_token: ${{ secrets.MY_FIRST_TERRAFORM_LOGIN_TOKEN }} #tekshirdim uzgartirdim
       
       - name: Run Terraform Init
         run: terraform init

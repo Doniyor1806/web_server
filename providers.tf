@@ -1,9 +1,9 @@
 terraform {
   cloud {
-    organization = "027-spring-cloud" # uzgartir
+    organization = "donis_cloud" # change  
 
     workspaces {
-      name = "aug-28-2024" # uzgartir
+      name = "apple_workspace_created_by_terraform" # uzgartirdim
     }
   }
   required_providers {
