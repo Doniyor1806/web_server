@@ -1,11 +1,11 @@
 resource "aws_key_pair" "deployer" {
   key_name   = "deployer-key"
-  public_key = file("~/.ssh/id_ed25519.pub") #uzgartir/tekshir
+  public_key = file("~/.ssh/id_ed25519.pub") #checked
 }
 
 variable "prefix" {
   type    = string
-  default = "project-aug-28-web-server" # uzgartir/tekshir vrode norm!
+  default = "project-aug-28-web-server" # changed
 }
 
 resource "aws_vpc" "main" {
@@ -17,16 +17,15 @@ resource "aws_vpc" "main" {
 
 resource "aws_subnet" "main" {
   vpc_id     = aws_vpc.main.id
-  cidr_block = "172.16.0.0/24" #tekshir/uzgartir
+  cidr_block = "172.16.0.0/24" 
 
   tags = {
     Name = join("-", ["${var.prefix}", "subnet"])
   }
 }
 
-module "remote_module" {
-  # source = terraform-aws-security-groups-027
-  source  = "app.terraform.io/donis_cloud/practice/module" #uzini remote modulini qoy
+module "practice" {
+  source  = "app.terraform.io/donis_cloud/practice/modules"
   version = "1.0.0"
   vpc_id  = aws_vpc.main.id
 
