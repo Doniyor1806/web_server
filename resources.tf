@@ -4,13 +4,13 @@ resource "aws_key_pair" "deployer" {
 }
 
 variable "prefix" {
-  type = string
+  type    = string
   default = "project-aug-28" # uzgartir/tekshir vrode norm!
 }
 
 resource "aws_vpc" "main" {
   cidr_block = "172.16.0.0/16"
-  tags       = {
+  tags = {
     Name = join("-", ["${var.prefix}", "vpc"])
   }
 }
@@ -26,7 +26,7 @@ resource "aws_subnet" "main" {
 
 # module "remote_module" {
 #   # source = terraform-aws-security-groups-027
-#   source  = "app.terraform.io/027-spring-cloud/security-groups-027/aws" #uzini remote modulini qoy
+#   source  = "app.terraform.io/donis_cloud/practice/module" #uzini remote modulini qoy
 #   version = "1.0.0"
 #   vpc_id  = aws_vpc.main.id
 
