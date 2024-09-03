@@ -10,8 +10,8 @@ on:
         type: string
         required: false
 env:
-  AWS_ACCESS_KEY_ID: ${{ secrets.SECRET_PRIME }} # uzgartir
-  AWS_SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }} #uzgartir
+  AWS_ACCESS_KEY_ID: ${{ secrets.MY_AWS_ACCESS_KEY_ID }} # uzgartir
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }} #uzgartir
   AWS_REGION: us-east-1
 
 jobs:
@@ -23,7 +23,7 @@ jobs:
       - name: My First Terraform Setup
         uses: hashicorp/setup-terraform@v2
         with:
-          cli_config_credentials_token: ${{ secrets.MY_FIRST_TERRAFORM_LOGIN_TOKEN }} #tekshirdim uzgartirdim
+          cli_config_credentials_token: ${{ secrets.MY_FIRST_TERRAFORM_LOGIN_TOKEN }} #tekshirdim uzgartirdim!
       
       - name: Run Terraform Init
         run: terraform init
