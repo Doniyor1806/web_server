@@ -11,7 +11,7 @@ on:
         required: false
 env:
   AWS_ACCESS_KEY_ID: ${{ secrets.MY_AWS_ACCESS_KEY_ID }} # changed and worked
-  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }} # changed band worked
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }} # changed and worked
   AWS_REGION: us-east-1
 
 jobs:
