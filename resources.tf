@@ -33,7 +33,7 @@ resource "aws_route_table_association" "main" {
   subnet_id      = aws_subnet.main.id
   route_table_id = aws_route_table.main.id
 }
-module "security_gr" {
+module "remote_module" {
   source  = "app.terraform.io/donis_cloud/practice/modules" #changed
   version = "1.0.1"
   vpc_id  = aws_vpc.main.id
@@ -77,11 +77,11 @@ module "security_gr" {
 }
 
 resource "aws_instance" "server" {
-  ami                    = "ami-066784287e358dad1"
+  ami                    = "ami-02871ef29847cd9d3"
   instance_type          = "t2.micro"
   key_name               = aws_key_pair.deployer.key_name
   subnet_id              = aws_subnet.main.id
-  vpc_security_group_ids = [module.security_gr.my-security_gr_id["web"]]
+  vpc_security_group_ids = [module.remote_module.my-security_gr_id["web"]]
 
   user_data = <<-EOF
                      #!/bin/bash
