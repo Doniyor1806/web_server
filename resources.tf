@@ -94,7 +94,11 @@ resource "aws_instance" "server" {
   tags = {
     Name = join("-", [var.prefix, "ec2"])
   }
+  lifecycle { ### this is for recreating resource and relaunch
+    create_before_destroy = true
+  }
 }
+
 resource "aws_eip" "instance_ip" {
   instance = aws_instance.server.id
   domain   = "vpc"
