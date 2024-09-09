@@ -33,9 +33,9 @@ resource "aws_route_table_association" "main" {
   subnet_id      = aws_subnet.main.id
   route_table_id = aws_route_table.main.id
 }
-module "remote_module" {
-  source  = "app.terraform.io/donis_cloud/practice/modules" #changed
-  version = "1.0.1"
+module "aws" {
+  source  = "app.terraform.io/donis_cloud/aws/group" ### security group 
+  version = "1.0.0"
   vpc_id  = aws_vpc.main.id
   security_groups = {
     "web" = {
