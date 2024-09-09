@@ -89,7 +89,7 @@ resource "aws_instance" "server" {
                      sudo yum install -y httpd
                      sudo systemctl start httpd.service
                      sudo systemctl enable httpd.service
-                     echo "<h1> Hello World from DS☺ </h1>" | sudo tee /var/www/html/index.html
+                     echo "<h1> Hello World from DS </h1>" | sudo tee /var/www/html/index.html
   EOF
   tags = {
     Name = join("-", [var.prefix, "ec2"])
