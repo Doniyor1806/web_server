@@ -33,8 +33,8 @@ resource "aws_route_table_association" "main" {
   subnet_id      = aws_subnet.main.id
   route_table_id = aws_route_table.main.id
 }
-module "aws" {
-  source  = "app.terraform.io/donis_cloud/aws/group" ### security group 
+module "security-grp" {
+  source  = "app.terraform.io/donis_cloud/security-grp/aws"
   version = "1.0.0"
   vpc_id  = aws_vpc.main.id
   security_groups = {
@@ -77,11 +77,11 @@ module "aws" {
 }
 
 resource "aws_instance" "server" {
-  ami                    = "ami-02871ef29847cd9d3"
+  ami                    = "ami-0182f373e66f89c85"
   instance_type          = "t2.micro"
   key_name               = aws_key_pair.deployer.key_name
   subnet_id              = aws_subnet.main.id
-  vpc_security_group_ids = [module.remote_module.my-security_gr_id["web"]]
+  vpc_security_group_ids = [module.security-grp.my-security_gr_id["web"]]
 
   user_data = <<-EOF
                      #!/bin/bash
@@ -89,7 +89,7 @@ resource "aws_instance" "server" {
                      sudo yum install -y httpd
                      sudo systemctl start httpd.service
                      sudo systemctl enable httpd.service
-                     echo "<h1> Hello World from  </h1>" | sudo tee /var/www/html/index.html
+                     echo "<h1> Hello World  </h1>" | sudo tee /var/www/html/index.html
   EOF
   tags = {
     Name = join("-", [var.prefix, "ec2"])
