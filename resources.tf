@@ -31,13 +31,27 @@ resource "aws_vpc" "main" {
 resource "aws_internet_gateway" "main" {
   vpc_id = aws_vpc.main.id
 }
-resource "aws_subnet" "main" {
+
+
+resource "aws_subnet" "main_a" {
   vpc_id     = aws_vpc.main.id
-  cidr_block = "172.16.0.0/24"
+  cidr_block = "172.16.1.0/24"
+  availability_zone = "us-east-1a"
   tags = {
     Name = join("-", [var.prefix, "subnet"])
   }
 }
+
+resource "aws_subnet" "main_b" {
+  vpc_id     = aws_vpc.main.id
+  cidr_block = "172.16.2.0/24"
+  availability_zone = "us-east-1b"
+  tags = {
+    Name = join("-", [var.prefix, "subnet"])
+  }
+}
+
+
 resource "aws_route_table" "main" {
   vpc_id = aws_vpc.main.id
   route {
@@ -46,7 +60,7 @@ resource "aws_route_table" "main" {
   }
 }
 resource "aws_route_table_association" "main" {
-  subnet_id      = aws_subnet.main.id
+  subnet_id      = aws_subnet.main_a.id
   route_table_id = aws_route_table.main.id
 }
 module "security-grp" {
@@ -106,7 +120,7 @@ resource "aws_instance" "server" {
   ami                    = "ami-0182f373e66f89c85"
   instance_type          = "t2.micro"
   key_name               = aws_key_pair.deployer.key_name
-  subnet_id              = aws_subnet.main.id
+  subnet_id              = aws_subnet.main_a.id
   vpc_security_group_ids = [module.security-grp.security_group_id["web"]]
 
   user_data = <<-EOF
@@ -141,3 +155,61 @@ output "instance_public_ips" {
 }
 
 ##################################
+
+
+resource "aws_lb" "test" {
+  name               = "test-lb-tf"
+  internal           = false
+  load_balancer_type = "application"
+  security_groups    = [module.security-grp.security_group_id.web]
+  subnets            = [aws_subnet.main_a.id, aws_subnet.main_b.id] ###### 1
+
+  enable_deletion_protection = false
+
+
+  tags = {
+    Environment = "production"
+  }
+}
+
+resource "aws_lb_target_group" "test" {
+  name     = "tf-example-lb-tg"
+  port     = 80
+  protocol = "HTTP"
+  vpc_id   = aws_vpc.main.id
+}
+
+
+resource "aws_lb" "front_end" {
+  name               = "front-end-lb"
+  internal           = false
+  load_balancer_type = "application"
+  security_groups    = [module.security-grp.security_group_id.web]
+  subnets            = [aws_subnet.main_a.id, aws_subnet.main_b.id]
+
+  enable_deletion_protection = false
+
+  tags = {
+    Environment = "production"
+  }
+}
+
+
+resource "aws_lb_target_group" "front_end" {
+  name     = "front-end-tg"
+  port     = 80
+  protocol = "HTTP"
+  vpc_id   = aws_vpc.main.id
+}
+
+resource "aws_lb_listener" "front_end" {
+  load_balancer_arn = aws_lb.front_end.arn
+  port              = "443"
+  protocol          = "HTTP"
+
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.front_end.arn
+  }
+}

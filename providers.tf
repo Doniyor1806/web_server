@@ -1,6 +1,7 @@
 terraform {
   cloud {
-    organization = "donis_cloud" # changed  
+
+    organization = "donis_cloud"
 
     workspaces {
       name = "apple_workspace_created_by_terraform" # changed
